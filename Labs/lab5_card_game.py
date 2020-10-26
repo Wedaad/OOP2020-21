@@ -46,7 +46,7 @@ class CardGame():
 
         # add elements into the frames
         self.open_card = Button(cards_frame)
-        the_card = PhotoImage(file='cards/queen_hearts.gif')
+        the_card = PhotoImage(file='cards/' + self.the_cards.get() + '.gif')
         self.open_card.config(image=the_card)
         self.open_card.grid(row=0, column=0, padx=2, pady=2)
         self.open_card.photo = the_card
@@ -78,16 +78,48 @@ class CardGame():
     # puts everything in a list first as it needs to be shuffled
     # returns a queue
     def load_cards(self):
-        cards = Queue(maxsize=52) #change this if you want to use a different data structure
+        cards = Queue(maxsize=52) # change this if you want to use a different data structure
         suits = ("hearts", "diamonds", "spades", "clubs")
         people = ("queen", "jack", "king")
         card_list = []
 
         # your code goes here:
 
+        values = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10')  # the numeric card values from 1 to 10
+
+        # populating card_list
+        for suit in suits:
+            for value in values:
+                card_list.append(value + "_" + suit)  # adding the numeric cards from each suit to the list card_list
+            for person in people:
+                card_list.append(person + "_" + suit)  # adding the queen/jack/king from each suit to card_list
+
+        print("Shuffled deck of Cards:\n")
+
+        # shuffle cards_list
+
         shuffle(card_list)
 
-        # your code goes here:
+        # print(len(card_list))
+
+        # removing duplicates from the list card_list
+        print(list(dict.fromkeys(card_list)))
+
+        # adding card_list elements to cards (queue)
+        for i in range(0, 52):
+            cards.put(card_list[i])
+
+        # print("\n Cards in the queue: \n")
+        # print(list(dict.fromkeys(cards.get()))) # printing the queue
+        # print(cards.get(card_list)
+
+        # print(cards.qsize()) # printing the size of the queue
+
+        # checking whether the queue is full or not
+        if cards.full():
+            print("\nIs the queue full: ", cards.full())
+        else:
+            print("\nIs the queue empty: ", cards.empty())
 
         return cards
 
@@ -96,6 +128,7 @@ class CardGame():
     # updates the display
     # updates the score
     def pick_card(self):
+
         pass  # replace this line by your code
 
     # contains the logic to compare if the score
