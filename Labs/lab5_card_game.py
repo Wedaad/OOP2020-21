@@ -13,7 +13,7 @@ from queue import Queue
 from random import shuffle
 
 
-class CardGame():
+class CardGame:
 
     # initialises the application
     def __init__(self):
@@ -46,25 +46,26 @@ class CardGame():
 
         # add elements into the frames
         self.open_card = Button(cards_frame)
-        the_card = PhotoImage(file='cards/' + self.the_cards.get() + '.gif')
+        the_card = PhotoImage(file=self.pick_card())
         self.open_card.config(image=the_card)
         self.open_card.grid(row=0, column=0, padx=2, pady=2)
         self.open_card.photo = the_card
 
-        closed_deck = Button(cards_frame)
+        closed_deck = Button(cards_frame, command=self.pick_card)  # command= self.pick_card
         closed_card = PhotoImage(file='cards/closed_deck.gif')
         closed_deck.config(image=closed_card)
         closed_deck.grid(row=0, column=1, padx=2, pady=2)
         closed_deck.photo = closed_card
 
-        done_button = Button(button_frame, text="I'm done!")
+        done_button = Button(button_frame, text="I'm done!", command=self.done_playing)  # command=self.done_playing
         done_button.grid(row=0, column=0, pady=12)
-        new_game_button = Button(button_frame, text="New Game")
+        new_game_button = Button(button_frame, text="New Game", command=self.reset_game)  # command= self.reset_game
         new_game_button.grid(row=1, column=0, pady=13)
         exit_button = Button(button_frame, text="Exit", command=self.game_exit)
         exit_button.grid(row=2, column=0, pady=13)
 
         self.score_label = Label(score_frame, text="Your score: " + str(self.player_score), justify=LEFT)
+        self.score_label.update_idletasks()
         self.score_label.pack()
 
         root.mainloop()
@@ -78,7 +79,7 @@ class CardGame():
     # puts everything in a list first as it needs to be shuffled
     # returns a queue
     def load_cards(self):
-        cards = Queue(maxsize=52) # change this if you want to use a different data structure
+        cards = Queue(maxsize=52)  # change this if you want to use a different data structure
         suits = ("hearts", "diamonds", "spades", "clubs")
         people = ("queen", "jack", "king")
         card_list = []
@@ -96,14 +97,11 @@ class CardGame():
 
         print("Shuffled deck of Cards:\n")
 
-        # shuffle cards_list
-
-        shuffle(card_list)
+        shuffle(card_list)       # shuffle cards_list
 
         # print(len(card_list))
 
-        # removing duplicates from the list card_list
-        print(list(dict.fromkeys(card_list)))
+        print(list(dict.fromkeys(card_list)))       # removing duplicates from the list card_list
 
         # adding card_list elements to cards (queue)
         for i in range(0, 52):
@@ -121,6 +119,15 @@ class CardGame():
         else:
             print("\nIs the queue empty: ", cards.empty())
 
+        # # showing the score of the first card
+        # picked_card = cards.get()
+        # self.player_score = str(picked_card.split('_')[0])
+        # print(self.player_score)
+
+        # splitting the card list
+        # for card in card_list:
+        #     print(card.split('_'))
+
         return cards
 
     # called when clicking on the closed deck of cards
@@ -128,14 +135,47 @@ class CardGame():
     # updates the display
     # updates the score
     def pick_card(self):
+        # print(self.the_cards.get())  # picking a random card from the queue as the player
 
-        pass  # replace this line by your code
+        # updating the cards image
+
+        current_card = self.the_cards.get()
+        card_file = 'cards/' + current_card + '.gif'
+        the_card = PhotoImage(file=card_file)
+        self.open_card.config(image=the_card)
+        self.open_card.photo = the_card
+        # self.open_card.update_idletasks()
+
+        # trying to load the value of the current card on the screen when the game is loaded, by splitting list
+        picked_card = current_card
+
+        if str(picked_card.split('_')[0]) == 'queen':
+            self.player_score = int(self.player_score + 10)
+        elif str(picked_card.split('_')[0]) == 'jack':
+            self.player_score = int(self.player_score + 10)
+        elif str(picked_card.split('_')[0]) == 'king':
+            self.player_score = int(self.player_score + 10)
+        else:
+            self.player_score = self.player_score + int(picked_card.split('_')[0])
+            print(self.player_score)
+
+        self.check_scores()
+
+        return card_file
 
     # contains the logic to compare if the score
     # is smaller, greater or equal to 21
     # sets a label
     def check_scores(self):
-        pass  # replace this line by your code
+        if self.player_score == 21:
+            print("You scored a Jackpot!!")
+            # self.reset_game()
+        elif self.player_score < 21:
+            # self.done_playing()
+            print("Well Done! You scored: ", self.player_score)
+        else:
+            print("You scored over 21, Hard Luck!")
+            # self.game_exit()
 
     # calculates the new score
     # takes a card argument of type
@@ -149,16 +189,23 @@ class CardGame():
     # should happen. Only options are to ask for a new game or
     # exit the program after this button was pressed.
     def done_playing(self):
-        pass  # replace this line by your code
+        print("This button works")
+
+        self.check_scores()
 
     # this method is called when the "New Game" button is clicked
     # resets all variables
     # sets the game's cards to the initial stage, with a freshly
     # shuffled card deck
     def reset_game(self):
-        pass  # replace this line by your code
+        # resetting the player score to 0
+        self.player_score = 0
 
+        # restarting the game by calling load_card()
+        self.the_cards = self.load_cards()
+        self.pick_card()
 
 # object creation here:
+
 
 app = CardGame()
