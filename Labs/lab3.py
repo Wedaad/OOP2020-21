@@ -15,13 +15,21 @@ class WordScramble:
         print("The user input was: ", self.user_input)
 
         # first scramble is just one word
+        scrambled = list(self.user_input)
+        scrambled[1], scrambled[3] = scrambled[3], scrambled[1]
+        scrambled[-2], scrambled[-3] = scrambled[-3], scrambled[-2]
+        print("".join(scrambled))
+
         # reverse two indices
+
+
         # particularly good to use is to switch the first two
         # and the last two
         # this only makes sense if you have a world that is longer than 3
 
 
         # now try to scramble one sentence
+
         # do just words first, then you can move on to work on
         # punctuation
 

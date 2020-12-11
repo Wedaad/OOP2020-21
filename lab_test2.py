@@ -8,12 +8,33 @@ class Document:
     """
     Class to handle file management for file writing.
     Class Document receives the file name at initialisation.
+
+    ...
+
+    Attributes:
+    -----
+
+        characters : list
+        an empty list. To hold the characters passed into the class
+
+        cursor: int
+        initialised to 0
+
+        filename: document (txt file)
+        a txt file that shows the changes made in this file in lab_t2.txt
+
     """
 
     def __init__(self, file_name):
         self.characters = []
         self.cursor = 0
         self.filename = file_name
+
+    @property
+    def getting_steps(self):
+        return steps
+
+
 
     def insert(self, character):
         """
@@ -54,7 +75,7 @@ class Document:
 
     def forward(self, steps):
         """
-        Method fowards to a particular position in
+        Method forwards to a particular position in
         characters [].
         Arguments:
         ----------
@@ -79,6 +100,15 @@ class Document:
         """
         self.cursor -= steps
 
+        # if the nunmber of steps passed greater than 0 change the value of cursor to 0 to insert at the begining of the characters in the text file
+        # trying to catch errors
+        try:
+            if steps > 0:
+                self.cursor = 0
+
+        except:
+            print("Program Crashed.")
+
 
 # initialising an object and using the class
 doc = Document("lab_t2.txt")
@@ -87,7 +117,9 @@ characters = 'fake mews'
 for letter in characters:
     doc.insert(letter)
 
-doc.backward(4)
+doc.backward(44)
 doc.delete()
 doc.insert('n')
 doc.save()
+print(doc.cursor)
+
