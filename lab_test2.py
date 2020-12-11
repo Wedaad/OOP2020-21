@@ -34,8 +34,6 @@ class Document:
     def getting_steps(self):
         return steps
 
-
-
     def insert(self, character):
         """
         Method inserts a character at the current
